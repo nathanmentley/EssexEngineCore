@@ -15,12 +15,7 @@ EssexEngine::Core::Logging::LogDriver::LogDriver(WeakPointer<Context> _context):
 
 EssexEngine::Core::Logging::LogDriver::~LogDriver() { }
 
-void EssexEngine::Core::Logging::LogDriver::LogLine(const char *format, ...) {
-    va_list args;
-    va_start(args, format);
-
-    vprintf(format, args);
+void EssexEngine::Core::Logging::LogDriver::LogLine(std::string format, va_list args) {
+    vprintf(format.c_str(), args);
     printf("\n");
-
-    va_end(args);
 }

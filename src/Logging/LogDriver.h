@@ -10,8 +10,6 @@
  */
 #pragma once
 
-#include <stdio.h>
-
 #include <EssexEngineCore/BaseDriver.h>
 #include <EssexEngineCore/ILogDriver.h>
 
@@ -25,18 +23,10 @@ namespace Logging{
             ~LogDriver();
             
             //IDriver
-            void Init() {
-                if(GetContext()->HasDriver<Logging::ILogDriver>()) {
-                    GetContext()->GetDriver<Logging::ILogDriver>()->LogLine(
-                        "Loading Driver [%s] [%s]",
-                        GetDriverName().c_str(),
-                        GetDriverVersion().c_str()
-                    );
-                }
-            }
+            void Init() {}
 
             //ILogDriver
-            void LogLine(const char *format, ...);
+            void LogLine(std::string format, va_list args);
             
             //BaseDriver
             std::string GetDriverName() { return "Console Log"; }

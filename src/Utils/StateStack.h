@@ -28,11 +28,11 @@ namespace Utils{
 			void Pop();
 			bool IsEmpty();
 			bool TopStateComplete();
-            void Clear();
+            		void Clear();
 			
-            std::vector<WeakPointer<Models::IState>> GetRawData();
+            		std::vector<WeakPointer<Models::IState>> GetRawData();
 			int GetLength();
 		private:
-            std::vector<WeakPointer<Models::IState>> data;
+            		std::vector<WeakPointer<Models::IState>> data;
 	};
 }}};

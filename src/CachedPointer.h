@@ -9,27 +9,40 @@
  * this file. If not, please visit: https://github.com/nathanmentley/EssexEngine
  */
 #pragma once
+
+#include <string>
+#include <stdio.h>
+#include <memory>
  
 #include <EssexEngineCore/Nullable.h>
-#include <EssexEngineCore/ISmartPointer.h>
 #include <EssexEngineCore/WeakPointer.h>
+#include <EssexEngineCore/IResourceCache.h>
   
 namespace EssexEngine{
-    template<class Type> class UniquePointer: public Nullable<Type*>, public ISmartPointer<Type>
+    template<class Type> class CachedPointer: public Nullable<Type*>
     {
         public:
-            UniquePointer(Type* _data): Nullable<Type*>(_data) {
+            CachedPointer(std::string _key, Type* _data, Core::Utils::IResourceCache<Type>* _cache): Nullable<Type*>(_data) {
+                key = _key;
                 ptr = _data;
+                cache = _cache;
+                moved = false;
+
+                cache->IncrementUsage(key);
+            }
+            CachedPointer() : Nullable<Type*>() {
                 moved = false;
             }
-            UniquePointer() : Nullable<Type*>() {}
-            ~UniquePointer() {
+            ~CachedPointer() {
                 if(!moved && Nullable<Type*>::HasValue()) {
-                    delete Get();
+                    //printf("\n\nDELETING CACHED PIONTER\n\n");
+                    //cache->ClearUsage(key);
                 }
             }
-            UniquePointer<Type>(UniquePointer<Type>&& other) {
+            CachedPointer<Type>(CachedPointer<Type>&& other) {
+                key = other.key;
                 ptr = other.ptr;
+                cache = other.cache;
 
                 if(other.HasValue()) {
                     Nullable<Type*>::Set(other.Get());
@@ -39,12 +52,8 @@ namespace EssexEngine{
 
                 other.moved = true;
             }
- 
-            Type* operator->() {
-                return ptr;
-            }
 
-            Type* Get() {
+            Type* operator->() {
                 return ptr;
             }
 
@@ -52,7 +61,9 @@ namespace EssexEngine{
                 return WeakPointer<Type>(ptr);
             }
         private:
+            std::string key;
             Type* ptr;
+            Core::Utils::IResourceCache<Type>* cache;
             bool moved;
     };
 };

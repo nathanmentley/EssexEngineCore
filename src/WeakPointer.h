@@ -12,16 +12,16 @@
  
 #include <memory>
  
-#include <EssexEngineCore/SmartPointer.h>
+#include <EssexEngineCore/Nullable.h>
   
 namespace EssexEngine{
-    template<class Type> class WeakPointer: public SmartPointer<Type>
+    template<class Type> class WeakPointer: public Nullable<Type*>
     {
         public:
-            WeakPointer(Type* _data): SmartPointer<Type>(_data) {
+            WeakPointer(Type* _data): Nullable<Type*>(_data) {
                 ptr = _data;
             }
-            WeakPointer(): SmartPointer<Type>() {}
+            WeakPointer(): Nullable<Type*>() {}
  
             Type* operator->() {
                 return ptr;
@@ -29,6 +29,10 @@ namespace EssexEngine{
 
             template<class ToType> WeakPointer<ToType> Cast() {
                 return WeakPointer<ToType>((ToType*)ptr);
+            }
+
+            Type* Get() {
+                return ptr;
             }
         private:
             Type* ptr;

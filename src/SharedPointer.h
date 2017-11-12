@@ -9,37 +9,34 @@
  * this file. If not, please visit: https://github.com/nathanmentley/EssexEngine
  */
 #pragma once
-
-#include <memory>
-
-#include <EssexEngineCore/WeakPointer.h>
-#include <EssexEngineCore/SmartPointer.h>
  
+#include <memory>
+ 
+#include <EssexEngineCore/Nullable.h>
+  
 namespace EssexEngine{
-    template<class Type> class SharedPointer: public SmartPointer<Type>
+    template<class Type> class SharedPointer: public Nullable<Type*>
     {
         public:
-            SharedPointer(Type* _data): SmartPointer<Type>(_data) {
-                ptr = std::shared_ptr<Type>(_data);
+            SharedPointer(Type* _data): Nullable<Type*>(_data) {
+                ptr = _data;
             }
-            SharedPointer(): SmartPointer<Type>() {}
-
-            Type* operator->() {
-                return ptr.get();
-            }
+            ~SharedPointer(): Nullable<Type*>() {
             
-            WeakPointer<Type> GetWeakPointer() {
-                return WeakPointer<Type>(ptr.get());
+            }
+ 
+            Type* operator->() {
+                return ptr;
             }
 
-            SharedPointer<Type> Clone() {
-                return SharedPointer<Type>(ptr);
+            Type* Get() {
+                return ptr;
             }
-        protected:
-            SharedPointer(std::shared_ptr<Type> _ptr) {
-                ptr = _ptr;
+
+            WeakPointer<Type> ToWeakPointer() {
+                return WeakPointer<Type>(ptr);
             }
         private:
-            std::shared_ptr<Type> ptr;
+            Type* ptr;
     };
 };

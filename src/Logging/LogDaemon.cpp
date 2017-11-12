@@ -16,8 +16,24 @@ EssexEngine::Core::Logging::LogDaemon::LogDaemon(WeakPointer<Context> _context):
 
 EssexEngine::Core::Logging::LogDaemon::~LogDaemon() {}
 
-void EssexEngine::Core::Logging::LogDaemon::LogLine(const char *format, ...) {
+void EssexEngine::Core::Logging::LogDaemon::DebugLine(std::string format, ...) {
     if(HasDriver()) {
-        GetDriver()->LogLine(format);
+        va_list args;
+        va_start(args, format);
+
+        GetDriver()->LogLine("DEBUG: " + format, args);
+        
+        va_end(args);
+    }
+}
+
+void EssexEngine::Core::Logging::LogDaemon::LogLine(std::string format, ...) {
+    if(HasDriver()) {
+        va_list args;
+        va_start(args, format);
+
+        GetDriver()->LogLine(format, args);
+        
+        va_end(args);
     }
 }

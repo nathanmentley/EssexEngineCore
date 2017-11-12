@@ -13,7 +13,7 @@
 #include <string>
 
 #include <EssexEngineCore/EssexEnvironment.h>
-#include <EssexEngineCore/UniquePointer.h>
+#include <EssexEngineCore/WeakPointer.h>
 #include <EssexEngineCore/IState.h>
 
 namespace EssexEngine{
@@ -21,8 +21,7 @@ namespace Core{
     class BaseApp
     {
         public:
-            //TODO: This shouldn't get passed in. We should create it in GetInitState
-            BaseApp(Models::IState* _initState) {
+            BaseApp(WeakPointer<Models::IState> _initState) {
                 initState = _initState;
             }
             ~BaseApp() {}
@@ -30,10 +29,10 @@ namespace Core{
             virtual std::string GetAppName() = 0;
             virtual std::string GetAppVersion() = 0;
 
-            UniquePointer<Models::IState> GetInitState() {
-                return UniquePointer<Models::IState>(initState);
+            WeakPointer<Models::IState> GetInitState() {
+                return initState;
             }
         protected:
-            Models::IState* initState;
+            WeakPointer<Models::IState> initState;
     };
 }};

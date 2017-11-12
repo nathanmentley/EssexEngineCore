@@ -10,18 +10,10 @@
  */
 #pragma once
 
-#include <stdio.h>
-#include <string>
-
-#include <EssexEngineCore/IDriver.h>
-
 namespace EssexEngine{
-namespace Core{
-namespace Logging{
-    class ILogDriver:public IDriver
+    template<class Type> class ISmartPointer
     {
         public:
-            virtual void LogLine(std::string format, va_list args) = 0;
         private:
     };
-}}};
+};

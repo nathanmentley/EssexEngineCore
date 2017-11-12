@@ -60,11 +60,12 @@ namespace EssexEngine{
                 isSet = false;
                 value = Type();
             }
-        private:
+        protected:
             void Set(Type _value) {
-                value = _value;
                 isSet = true;
+                value = _value;
             }
+        private:
             Type value;
             bool isSet;
     };

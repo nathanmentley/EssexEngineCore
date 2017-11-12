@@ -23,18 +23,17 @@ namespace Logging{
 			~LogDaemon();
 
 			void Init() {
-				if(GetContext()->HasDriver<Core::Logging::ILogDriver>()) {
-					GetContext()->GetDriver<Core::Logging::ILogDriver>()->LogLine(
-						"Loading Daemon [%s] [%s]",
-						GetDaemonName().c_str(),
-						GetDaemonVersion().c_str()
-					);
-				}
+				LogLine(
+					"Loading Daemon [%s] [%s]",
+					GetDaemonName().c_str(),
+					GetDaemonVersion().c_str()
+				);
 			}
 			std::string GetDaemonName() { return "Logging"; }
 			std::string GetDaemonVersion() { return ESSEX_ENGINE_VERSION; }
 
-			void LogLine(const char *format, ...);
+			void LogLine(std::string format, ...);
+            void DebugLine(std::string format, ...);
 		private:
 	};
 }}};
