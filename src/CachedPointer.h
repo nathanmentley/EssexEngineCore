@@ -11,8 +11,6 @@
 #pragma once
 
 #include <string>
-#include <stdio.h>
-#include <memory>
  
 #include <EssexEngineCore/Nullable.h>
 #include <EssexEngineCore/WeakPointer.h>
@@ -35,8 +33,7 @@ namespace EssexEngine{
             }
             ~CachedPointer() {
                 if(!moved && Nullable<Type*>::HasValue()) {
-                    //printf("\n\nDELETING CACHED PIONTER\n\n");
-                    //cache->ClearUsage(key);
+                    cache->ClearUsage(key);
                 }
             }
             CachedPointer<Type>(CachedPointer<Type>&& other) {

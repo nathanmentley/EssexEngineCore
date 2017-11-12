@@ -46,18 +46,14 @@ namespace Utils{
 			void Cache(std::string key, WeakPointer<Type> value) {
                 data.emplace(key, value);
                 usage.emplace(key, 0);
-                
-                //log->DebugLine("caching resource: [%s]", key.c_str());
             }
         
             void IncrementUsage(std::string key) {
                 usage[key]++;
-                //log->DebugLine("provisioning resource: %d [%s]", usage[key], key.c_str());
             }
 
             void ClearUsage(std::string key) {
                 usage[key]--;
-                //log->DebugLine("deprovisioning resource: %d [%s]", usage[key], key.c_str());
 
                 if(usage[key] == 0) {
                     Clear(key);
@@ -65,12 +61,12 @@ namespace Utils{
             }
         protected:
             void Clear(std::string key) {
-                //log->DebugLine("deleting resource: [%s]", key.c_str());
+                if(HasKey(key)) {
+                    delete data[key].Get();
 
-                delete Get(key).Get();
-
-                data.erase(key);
-                usage.erase(key);
+                    data.erase(key);
+                    usage.erase(key);
+                }
             }
         private:
             WeakPointer<Logging::LogDaemon> log;
