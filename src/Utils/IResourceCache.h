@@ -10,16 +10,14 @@
  */
 #pragma once
 
-#include <string>
-
 namespace EssexEngine{
 namespace Core{
 namespace Utils{
-    template<class Type> class IResourceCache
+    template<class KeyType, class ValueType> class IResourceCache
 	{
 		public:
-            virtual void IncrementUsage(std::string key) = 0;
-            virtual void ClearUsage(std::string key) = 0;
+            virtual void IncrementUsage(KeyType key) = 0;
+            virtual void ClearUsage(KeyType key) = 0;
 		private:
 	};
 }}};

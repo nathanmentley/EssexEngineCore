@@ -22,7 +22,9 @@ namespace EssexEngine{
                 ptr = _data;
                 moved = false;
             }
-            UniquePointer() : Nullable<Type*>() {}
+            UniquePointer() : Nullable<Type*>() {
+                moved = false;
+            }
             ~UniquePointer() {
                 if(!moved && Nullable<Type*>::HasValue()) {
                     delete Get();
@@ -40,6 +42,14 @@ namespace EssexEngine{
                 other.moved = true;
             }
  
+            void swap(UniquePointer<Type>& other)
+            {
+                std::swap(ptr, other.ptr);
+                std::swap(moved, other.moved);
+
+                Nullable<Type*>::swap(other);
+            }
+
             Type* operator->() {
                 return ptr;
             }

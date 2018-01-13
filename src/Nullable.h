@@ -9,24 +9,26 @@
  * this file. If not, please visit: https://github.com/nathanmentley/EssexEngine
  */
  #pragma once
-  
+
+#include <utility>
+
 namespace EssexEngine{
     template<class Type> class Nullable 
     {
         public:
-            Nullable() : value(), isSet(false) {}
-            Nullable(Type _value) : value(_value), isSet(true) {} 
-            Nullable(const Nullable& other) : value(other.value), isSet(other.isSet) {}
+            Nullable<Type>() : value(), isSet(false) {}
+            Nullable<Type>(Type _value) : value(_value), isSet(true) {} 
+            Nullable<Type>(const Nullable& other) : value(other.value), isSet(other.isSet) {}
         
-            friend void swap(Nullable& a, Nullable& b)
+            void swap(Nullable<Type>& other)
             {
-                std::swap(a.isSet, b.isSet);
-                std::swap(a.value, b.value);
+                std::swap(isSet, other.isSet);
+                std::swap(value, other.value);
             }
         
-            Nullable& operator=(Nullable other) 
+            Nullable<Type>& operator=(Nullable<Type> other) 
             {
-                swap(*this, other);
+                swap(other);
                 return *this;
             }
         

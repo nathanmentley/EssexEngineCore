@@ -12,7 +12,6 @@
 
 #include <map>
 #include <memory>
-#include <string>
 #include <utility>
 
 #include <EssexEngineCore/IResourceCache.h>
@@ -24,35 +23,35 @@
 namespace EssexEngine{
 namespace Core{
 namespace Utils{
-    template<class Type> class ResourceCache: public IResourceCache<Type>
+    template<class KeyType, class ValueType> class ResourceCache: public IResourceCache<KeyType, ValueType>
 	{
 		public:
 			ResourceCache(WeakPointer<Logging::LogDaemon> _log) {
                 log = _log;
 
-			    data = std::map<std::string, WeakPointer<Type>>();
-                usage = std::map<std::string, uint32_t>();
+			    data = std::map<KeyType, WeakPointer<ValueType>>();
+                usage = std::map<KeyType, uint32_t>();
 			}
 			~ResourceCache() {}
 
-			bool HasKey(std::string key) {
+			bool HasKey(KeyType key) {
 				return (data.find(key) != data.end());
 			}
 
-			CachedPointer<Type> Get(std::string key) {
-                return std::move(CachedPointer<Type>(key, data[key].Get(), this));
+			CachedPointer<KeyType, ValueType> Get(KeyType key) {
+                return std::move(CachedPointer<KeyType, ValueType>(key, data[key].Get(), this));
             }
 
-			void Cache(std::string key, WeakPointer<Type> value) {
+			void Cache(KeyType key, WeakPointer<ValueType> value) {
                 data.emplace(key, value);
                 usage.emplace(key, 0);
             }
         
-            void IncrementUsage(std::string key) {
+            void IncrementUsage(KeyType key) {
                 usage[key]++;
             }
 
-            void ClearUsage(std::string key) {
+            void ClearUsage(KeyType key) {
                 usage[key]--;
 
                 if(usage[key] == 0) {
@@ -60,7 +59,7 @@ namespace Utils{
                 }
             }
         protected:
-            void Clear(std::string key) {
+            void Clear(KeyType key) {
                 if(HasKey(key)) {
                     delete data[key].Get();
 
@@ -71,7 +70,7 @@ namespace Utils{
         private:
             WeakPointer<Logging::LogDaemon> log;
 
-            std::map<std::string, WeakPointer<Type>> data;
-            std::map<std::string, uint32_t> usage;
+            std::map<KeyType, WeakPointer<ValueType>> data;
+            std::map<KeyType, uint32_t> usage;
 	};
 }}};

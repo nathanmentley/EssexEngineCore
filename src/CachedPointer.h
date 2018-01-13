@@ -10,17 +10,15 @@
  */
 #pragma once
 
-#include <string>
- 
 #include <EssexEngineCore/Nullable.h>
 #include <EssexEngineCore/WeakPointer.h>
 #include <EssexEngineCore/IResourceCache.h>
   
 namespace EssexEngine{
-    template<class Type> class CachedPointer: public Nullable<Type*>
+    template<class KeyType, class ValueType> class CachedPointer: public Nullable<ValueType*>
     {
         public:
-            CachedPointer(std::string _key, Type* _data, Core::Utils::IResourceCache<Type>* _cache): Nullable<Type*>(_data) {
+            CachedPointer(KeyType _key, ValueType* _data, Core::Utils::IResourceCache<KeyType, ValueType>* _cache): Nullable<ValueType*>(_data) {
                 key = _key;
                 ptr = _data;
                 cache = _cache;
@@ -28,39 +26,39 @@ namespace EssexEngine{
 
                 cache->IncrementUsage(key);
             }
-            CachedPointer() : Nullable<Type*>() {
+            CachedPointer() : Nullable<ValueType*>() {
                 moved = false;
             }
             ~CachedPointer() {
-                if(!moved && Nullable<Type*>::HasValue()) {
+                if(!moved && Nullable<ValueType*>::HasValue()) {
                     cache->ClearUsage(key);
                 }
             }
-            CachedPointer<Type>(CachedPointer<Type>&& other) {
+            CachedPointer<KeyType, ValueType>(CachedPointer<KeyType, ValueType>&& other) {
                 key = other.key;
                 ptr = other.ptr;
                 cache = other.cache;
 
                 if(other.HasValue()) {
-                    Nullable<Type*>::Set(other.Get());
+                    Nullable<ValueType*>::Set(other.Get());
                 } else {
-                    Nullable<Type*>::Reset();
+                    Nullable<ValueType*>::Reset();
                 }
 
                 other.moved = true;
             }
 
-            Type* operator->() {
+            ValueType* operator->() {
                 return ptr;
             }
 
-            WeakPointer<Type> ToWeakPointer() {
-                return WeakPointer<Type>(ptr);
+            WeakPointer<ValueType> ToWeakPointer() {
+                return WeakPointer<ValueType>(ptr);
             }
         private:
-            std::string key;
-            Type* ptr;
-            Core::Utils::IResourceCache<Type>* cache;
+            KeyType key;
+            ValueType* ptr;
+            Core::Utils::IResourceCache<KeyType, ValueType>* cache;
             bool moved;
     };
 };

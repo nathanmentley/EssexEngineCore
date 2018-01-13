@@ -14,6 +14,7 @@ namespace EssexEngine{
     template<class Type> class ISmartPointer
     {
         public:
+            virtual Type* Get() = 0;
         private:
     };
 };

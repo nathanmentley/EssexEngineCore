@@ -10,19 +10,43 @@
  */
 #pragma once
  
-#include <memory>
+#include <map>
  
-#include <EssexEngineCore/Nullable.h>
-  
+#include <EssexEngineCore/Nullable.h>  
+#include <EssexEngineCore/ISmartPointer.h>
+#include <EssexEngineCore/WeakPointer.h>
+
 namespace EssexEngine{
-    template<class Type> class SharedPointer: public Nullable<Type*>
+    template<class Type> class SharedPointer: public Nullable<Type*>, public ISmartPointer<Type>
     {
         public:
             SharedPointer(Type* _data): Nullable<Type*>(_data) {
                 ptr = _data;
+                moved = false;
+
+                //TODO: reference counting inc
             }
-            ~SharedPointer(): Nullable<Type*>() {
-            
+            SharedPointer() : Nullable<Type*>() {
+                moved = false;
+            }
+            ~SharedPointer() {
+                //TODO: check reference count
+                if(!moved && Nullable<Type*>::HasValue()) {
+                    delete Get();
+                }
+            }
+            SharedPointer<Type>(SharedPointer<Type>&& other) {
+                ptr = other.ptr;
+
+                if(other.HasValue()) {
+                    Nullable<Type*>::Set(other.Get());
+                } else {
+                    Nullable<Type*>::Reset();
+                }
+
+                other.moved = true;
+
+                //TODO: Ensure counting inc doesn't happen.
             }
  
             Type* operator->() {
@@ -38,5 +62,6 @@ namespace EssexEngine{
             }
         private:
             Type* ptr;
+            bool moved;
     };
 };
