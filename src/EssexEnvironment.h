@@ -11,6 +11,6 @@
 #pragma once
 
 #define ESSEX_ENGINE_NAME "Essex Engine"
-#define ESSEX_ENGINE_VERSION "0.0.1 - Bleeding"
+#define ESSEX_ENGINE_VERSION "0.0.2"
 
 #define GAME_FILE_LOCATION "content/root/main.json"

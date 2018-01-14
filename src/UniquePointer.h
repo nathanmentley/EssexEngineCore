@@ -61,6 +61,12 @@ namespace EssexEngine{
             WeakPointer<Type> ToWeakPointer() {
                 return WeakPointer<Type>(ptr);
             }
+
+            //Nullable Overrides
+            void Reset() {
+                delete Get();
+                Nullable<Type*>::Reset();
+            }
         private:
             Type* ptr;
             bool moved;
