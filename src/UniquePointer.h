@@ -72,11 +72,9 @@ namespace EssexEngine{
             //Nullable Overrides
             void Reset() {
                 if(!moved && Nullable<Type*>::HasValue()) {
+                    Nullable<Type*>::Reset();
                     delete Get();
                 } 
-                
-                Nullable<Type*>::Reset();
-                moved = false;
             }
         private:
             Type* ptr;
