@@ -16,6 +16,8 @@ namespace Models{
     class IState
     {
     public:
+        virtual ~IState() {};
+
         virtual void Setup() = 0;
         
         virtual void Logic() = 0;

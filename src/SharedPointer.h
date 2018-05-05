@@ -16,6 +16,7 @@
 #include <EssexEngineCore/ISmartPointer.h>
 #include <EssexEngineCore/WeakPointer.h>
 
+//TODO: I don't think we want this. I would like to drop it. Also it's totally not working right now.
 namespace EssexEngine{
     template<class Type> class SharedPointer: public Nullable<Type*>, public ISmartPointer<Type>
     {

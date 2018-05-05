@@ -14,10 +14,10 @@ namespace EssexEngine{
 namespace Core{
 namespace Utils{
     template<class KeyType, class ValueType> class IResourceCache
-	{
-		public:
+    {
+        public:
             virtual void IncrementUsage(KeyType key) = 0;
             virtual void ClearUsage(KeyType key) = 0;
-		private:
-	};
+        private:
+    };
 }}};

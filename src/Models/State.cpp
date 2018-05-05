@@ -13,9 +13,9 @@
 
 EssexEngine::Core::Models::State::State(WeakPointer<Context> _context)
 {
-	completed = false;
-	
-	context = _context;
+    completed = false;
+    
+    context = _context;
 }
 
 EssexEngine::Core::Models::State::~State()

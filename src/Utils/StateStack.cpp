@@ -21,8 +21,8 @@ EssexEngine::Core::Utils::StateStack::~StateStack()
 }
 
 void EssexEngine::Core::Utils::StateStack::Push(WeakPointer<Models::IState> state) {
-	state->Setup();
-	data.push_back(state);
+    state->Setup();
+    data.push_back(state);
 }
 
 void EssexEngine::Core::Utils::StateStack::Pop() {
@@ -48,9 +48,9 @@ bool EssexEngine::Core::Utils::StateStack::TopStateComplete() {
 }
 
 std::vector<EssexEngine::WeakPointer<EssexEngine::Core::Models::IState>> EssexEngine::Core::Utils::StateStack::GetRawData() {
-	return data;
+    return data;
 }
 
 int EssexEngine::Core::Utils::StateStack::GetLength() {
-	return (int)data.size();
+    return (int)data.size();
 }

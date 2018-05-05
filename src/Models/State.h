@@ -18,12 +18,12 @@ namespace EssexEngine{
 namespace Core{
 namespace Models{
     class State: public IState
-	{
-		public:
-			State(WeakPointer<Context> _context);
-			~State();
-		protected:
-			WeakPointer<Context> context;
-		private:
-	};
+    {
+        public:
+            State(WeakPointer<Context> _context);
+            ~State();
+        protected:
+            WeakPointer<Context> context;
+        private:
+    };
 }}};

@@ -8,7 +8,7 @@
  * You should have received a copy of the BSD license with
  * this file. If not, please visit: https://github.com/nathanmentley/EssexEngine
  */
- #pragma once
+#pragma once
 
 #include <utility>
 

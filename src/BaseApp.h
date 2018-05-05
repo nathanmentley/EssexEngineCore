@@ -13,6 +13,7 @@
 #include <string>
 
 #include <EssexEngineCore/EssexEnvironment.h>
+#include <EssexEngineCore/UniquePointer.h>
 #include <EssexEngineCore/WeakPointer.h>
 #include <EssexEngineCore/IState.h>
 
@@ -21,18 +22,11 @@ namespace Core{
     class BaseApp
     {
         public:
-            BaseApp(WeakPointer<Models::IState> _initState) {
-                initState = _initState;
-            }
-            ~BaseApp() {}
+            BaseApp() {}
+            virtual ~BaseApp() {}
 
             virtual std::string GetAppName() = 0;
             virtual std::string GetAppVersion() = 0;
-
-            WeakPointer<Models::IState> GetInitState() {
-                return initState;
-            }
-        protected:
-            WeakPointer<Models::IState> initState;
+            virtual WeakPointer<Models::IState> GetInitState() = 0;
     };
 }};

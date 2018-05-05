@@ -26,8 +26,7 @@ namespace EssexEngine{
     class Context
     {
         public:
-            Context() {
-                stateStack = std::unique_ptr<Core::Utils::StateStack>(new Core::Utils::StateStack());
+            Context(): app(UniquePointer<Core::BaseApp>()), stateStack(UniquePointer<Core::Utils::StateStack>(new Core::Utils::StateStack())) {
                 daemonMap = std::unordered_map<std::type_index, WeakPointer<Core::IDaemon>>();
                 driverMap = std::unordered_map<std::type_index, WeakPointer<Core::IDriver>>();
             }
@@ -58,20 +57,20 @@ namespace EssexEngine{
             }
             //Apps
             WeakPointer<Core::BaseApp> GetBaseApp() {
-                return WeakPointer<Core::BaseApp>(app);
+                return app.ToWeakPointer();
             }
-            void RegisterApp(WeakPointer<Core::BaseApp> _app) {
-                app = _app;
+            void RegisterApp(Core::BaseApp* _app) {
+                app.Replace(_app);
             }
             //States
             WeakPointer<Core::Utils::StateStack> GetStateStack() {
-                return WeakPointer<Core::Utils::StateStack>(stateStack.get());
+                return stateStack.ToWeakPointer();
             }
         private:
             std::unordered_map<std::type_index, WeakPointer<Core::IDaemon>> daemonMap;
             std::unordered_map<std::type_index, WeakPointer<Core::IDriver>> driverMap;
 
-            WeakPointer<Core::BaseApp> app;
-            std::unique_ptr<Core::Utils::StateStack> stateStack;
+            UniquePointer<Core::BaseApp> app;
+            UniquePointer<Core::Utils::StateStack> stateStack;
     };
 };

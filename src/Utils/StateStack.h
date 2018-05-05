@@ -19,20 +19,20 @@ namespace EssexEngine{
 namespace Core{
 namespace Utils{
     class StateStack
-	{
-		public:
-			StateStack();
-			~StateStack();
+    {
+        public:
+            StateStack();
+            ~StateStack();
 
-			void Push(WeakPointer<Models::IState> state);
-			void Pop();
-			bool IsEmpty();
-			bool TopStateComplete();
-            		void Clear();
-			
-            		std::vector<WeakPointer<Models::IState>> GetRawData();
-			int GetLength();
-		private:
-            		std::vector<WeakPointer<Models::IState>> data;
-	};
+            void Push(WeakPointer<Models::IState> state);
+            void Pop();
+            bool IsEmpty();
+            bool TopStateComplete();
+            void Clear();
+            
+            std::vector<WeakPointer<Models::IState>> GetRawData();
+            int GetLength();
+        private:
+            std::vector<WeakPointer<Models::IState>> data;
+    };
 }}};
