@@ -10,6 +10,8 @@
  */
 #pragma once
 
+#include <stdio.h>
+
 #include <EssexEngineCore/BaseDaemon.h>
 #include <EssexEngineCore/ILogDriver.h>
 

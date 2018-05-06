@@ -25,8 +25,8 @@ namespace Daemons{
       /*!
       A more elaborate class description.
       */
-	template <class DriverType> class BaseDaemon: public Core::IDaemon
-	{
+    template <class DriverType> class BaseDaemon: public Core::IDaemon
+    {
             public:
                   //! A constructor.
                   /*!
@@ -76,5 +76,5 @@ namespace Daemons{
                         Details.
                   */
                   WeakPointer<Context> context;
-	};
+    };
 }};

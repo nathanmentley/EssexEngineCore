@@ -10,7 +10,6 @@
  */
 #pragma once
 
-#include <stdio.h>
 #include <string>
 
 #include <EssexEngineCore/IDriver.h>

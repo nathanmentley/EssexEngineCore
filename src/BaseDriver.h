@@ -17,23 +17,23 @@
 #include <EssexEngineCore/IDriver.h>
 
 namespace EssexEngine{
-    namespace Core{
-        namespace Drivers{
-            namespace Base{
-                class BaseDriver: public IDriver
-                {
-                public:
-                    BaseDriver(WeakPointer<Context> _context) {
-                        context = _context;
-                    }
-                    ~BaseDriver() {}
-                    virtual std::string GetDriverName() = 0;
-                    virtual std::string GetDriverVersion() = 0;
-                protected:
-                    WeakPointer<Context> GetContext() {
-                        return context;
-                    }
-                private:
-                    WeakPointer<Context> context;
-                };
-            }}}};
+namespace Core{
+namespace Drivers{
+namespace Base{
+    class BaseDriver: public IDriver
+    {
+        public:
+            BaseDriver(WeakPointer<Context> _context) {
+                context = _context;
+            }
+            ~BaseDriver() {}
+            virtual std::string GetDriverName() = 0;
+            virtual std::string GetDriverVersion() = 0;
+        protected:
+            WeakPointer<Context> GetContext() {
+                return context;
+            }
+        private:
+            WeakPointer<Context> context;
+    };
+}}}};
