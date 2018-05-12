@@ -1,7 +1,7 @@
 /* 
  * Essex Engine
  * 
- * Copyright (C) 2017 Nathan Mentley - All Rights Reserved
+ * Copyright (C) 2018 Nathan Mentley - All Rights Reserved
  * You may use, distribute and modify this code under the
  * terms of the BSD license.
  *
@@ -11,12 +11,14 @@
 
 #include <EssexEngineCore/LogDaemon.h>
 
-EssexEngine::Core::Logging::LogDaemon::LogDaemon(WeakPointer<Context> _context):BaseDaemon(_context) {
+using EssexEngine::Core::Logging::LogDaemon;
+
+LogDaemon::LogDaemon(WeakPointer<Context> _context):BaseDaemon(_context) {
 }
 
-EssexEngine::Core::Logging::LogDaemon::~LogDaemon() {}
+LogDaemon::~LogDaemon() {}
 
-void EssexEngine::Core::Logging::LogDaemon::DebugLine(std::string format, ...) {
+void LogDaemon::DebugLine(std::string format, ...) {
     if(HasDriver()) {
         va_list args;
         va_start(args, format);
@@ -27,7 +29,7 @@ void EssexEngine::Core::Logging::LogDaemon::DebugLine(std::string format, ...) {
     }
 }
 
-void EssexEngine::Core::Logging::LogDaemon::LogLine(std::string format, ...) {
+void LogDaemon::LogLine(std::string format, ...) {
     if(HasDriver()) {
         va_list args;
         va_start(args, format);

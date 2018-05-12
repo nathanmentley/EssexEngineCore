@@ -1,7 +1,7 @@
 /* 
  * Essex Engine
  * 
- * Copyright (C) 2017 Nathan Mentley - All Rights Reserved
+ * Copyright (C) 2018 Nathan Mentley - All Rights Reserved
  * You may use, distribute and modify this code under the
  * terms of the BSD license.
  *
@@ -11,35 +11,37 @@
 
 #include <EssexEngineCore/StateStack.h>
 
-EssexEngine::Core::Utils::StateStack::StateStack()
+using EssexEngine::WeakPointer;
+using EssexEngine::Core::Models::IState;
+using EssexEngine::Core::Utils::StateStack;
+
+StateStack::StateStack()
 {
     data = std::vector<WeakPointer<Models::IState>>();
 }
 
-EssexEngine::Core::Utils::StateStack::~StateStack()
-{
-}
+StateStack::~StateStack() {}
 
-void EssexEngine::Core::Utils::StateStack::Push(WeakPointer<Models::IState> state) {
+void StateStack::Push(WeakPointer<Models::IState> state) {
     state->Setup();
     data.push_back(state);
 }
 
-void EssexEngine::Core::Utils::StateStack::Pop() {
+void StateStack::Pop() {
     if(!data.empty()) {
         data.pop_back();
     }
 }
 
-bool EssexEngine::Core::Utils::StateStack::IsEmpty() {
+bool StateStack::IsEmpty() {
     return data.empty();
 }
 
-void EssexEngine::Core::Utils::StateStack::Clear() {
+void StateStack::Clear() {
     data.clear();
 }
 
-bool EssexEngine::Core::Utils::StateStack::TopStateComplete() {
+bool StateStack::TopStateComplete() {
     if(!data.empty()) {
         return data.back()->completed;
     }
@@ -47,10 +49,10 @@ bool EssexEngine::Core::Utils::StateStack::TopStateComplete() {
     return true;
 }
 
-std::vector<EssexEngine::WeakPointer<EssexEngine::Core::Models::IState>> EssexEngine::Core::Utils::StateStack::GetRawData() {
+std::vector<WeakPointer<IState>> StateStack::GetRawData() {
     return data;
 }
 
-int EssexEngine::Core::Utils::StateStack::GetLength() {
+int StateStack::GetLength() {
     return (int)data.size();
 }
