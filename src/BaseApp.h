@@ -16,17 +16,41 @@
 #include <EssexEngineCore/UniquePointer.h>
 #include <EssexEngineCore/WeakPointer.h>
 #include <EssexEngineCore/IState.h>
+#include <EssexEngineCore/StateStack.h>
+#include <EssexEngineCore/Context.h>
+#include <EssexEngineCore/IApp.h>
 
 namespace EssexEngine{
 namespace Core{
-    class BaseApp
+    class BaseApp: public IApp
     {
         public:
-            BaseApp() {}
-            virtual ~BaseApp() {}
+            BaseApp(WeakPointer<Context> _context): IApp(),
+            stateStack(
+                UniquePointer<Core::Utils::StateStack>(
+                    new Core::Utils::StateStack()
+                )
+            ) {
+                context = _context;
+            }
+            
+            virtual ~BaseApp() {
+                while(!GetStateStack()->IsEmpty()) {
+                    GetStateStack()->Pop();
+                }
+            }
 
             virtual std::string GetAppName() = 0;
             virtual std::string GetAppVersion() = 0;
             virtual WeakPointer<Models::IState> GetInitState() = 0;
+
+            virtual void Execute() = 0;
+            
+            WeakPointer<Core::Utils::StateStack> GetStateStack() {
+                return stateStack.ToWeakPointer();
+            }
+        protected:
+            UniquePointer<Core::Utils::StateStack> stateStack;
+            WeakPointer<Context> context;
     };
 }};

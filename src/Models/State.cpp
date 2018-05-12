@@ -13,11 +13,11 @@
 
 using EssexEngine::Core::Models::State;
 
-State::State(WeakPointer<Context> _context)
+State::State(WeakPointer<Context> _context, WeakPointer<IApp> _app)
 {
     completed = false;
-    
     context = _context;
+    app = _app;
 }
 
 State::~State()

@@ -13,8 +13,6 @@
 #include <EssexEngineCore/WeakPointer.h>
 #include <EssexEngineCore/WeakPointer.h>
 #include <EssexEngineCore/EssexEnvironment.h>
-#include <EssexEngineCore/StateStack.h>
-#include <EssexEngineCore/BaseApp.h>
 #include <EssexEngineCore/IDriver.h>
 #include <EssexEngineCore/IDaemon.h>
 
@@ -26,7 +24,7 @@ namespace EssexEngine{
     class Context
     {
         public:
-            Context(): app(UniquePointer<Core::BaseApp>()), stateStack(UniquePointer<Core::Utils::StateStack>(new Core::Utils::StateStack())) {
+            Context() {
                 daemonMap = std::unordered_map<std::type_index, WeakPointer<Core::IDaemon>>();
                 driverMap = std::unordered_map<std::type_index, WeakPointer<Core::IDriver>>();
             }
@@ -55,22 +53,8 @@ namespace EssexEngine{
                 daemonMap[typeid(DaemonType)] = WeakPointer<Core::IDaemon>(daemon.Get());
                 daemon->Init();
             }
-            //Apps
-            WeakPointer<Core::BaseApp> GetBaseApp() {
-                return app.ToWeakPointer();
-            }
-            void RegisterApp(Core::BaseApp* _app) {
-                app.Replace(_app);
-            }
-            //States
-            WeakPointer<Core::Utils::StateStack> GetStateStack() {
-                return stateStack.ToWeakPointer();
-            }
         private:
             std::unordered_map<std::type_index, WeakPointer<Core::IDaemon>> daemonMap;
             std::unordered_map<std::type_index, WeakPointer<Core::IDriver>> driverMap;
-
-            UniquePointer<Core::BaseApp> app;
-            UniquePointer<Core::Utils::StateStack> stateStack;
     };
 };

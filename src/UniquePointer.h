@@ -19,6 +19,8 @@ namespace EssexEngine{
             UniquePointer(Type* _data): BaseUniquePointer<Type>(_data, DeleteUniquePointer) {}
             UniquePointer() : BaseUniquePointer<Type>(DeleteUniquePointer) {}
 
-            static void DeleteUniquePointer(Type* ptr) { delete ptr; }
+            static void DeleteUniquePointer(Type* ptr) {
+                delete ptr;
+            }
     };
 };

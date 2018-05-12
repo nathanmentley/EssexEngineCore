@@ -11,21 +11,18 @@
 #pragma once
 
 #include <EssexEngineCore/WeakPointer.h>
-#include <EssexEngineCore/Context.h>
-#include <EssexEngineCore/IState.h>
-#include <EssexEngineCore/IApp.h>
+#include <EssexEngineCore/StateStack.h>
 
 namespace EssexEngine{
 namespace Core{
-namespace Models{
-    class State: public IState
+    class IApp
     {
         public:
-            State(WeakPointer<Context> _context, WeakPointer<IApp> _app);
-            ~State();
-        protected:
-            WeakPointer<Context> context;
-            WeakPointer<IApp> app;
-        private:
+            IApp() {}
+            virtual ~IApp() {}
+            
+            virtual void Execute() = 0;
+            virtual WeakPointer<Core::Utils::StateStack> GetStateStack() = 0;
     };
-}}};
+}};
+
