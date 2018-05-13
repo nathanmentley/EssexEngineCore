@@ -18,9 +18,7 @@ using EssexEngine::Core::IMessage;
 using EssexEngine::Core::Logging::LogDaemon;
 using EssexEngine::Core::Logging::Messages::MessageType;
 
-LogDaemon::LogDaemon(WeakPointer<Context> _context):BaseQueuedDaemon(_context) {
-}
-
+LogDaemon::LogDaemon(WeakPointer<Context> _context):BaseProcessDaemon(_context) {}
 LogDaemon::~LogDaemon() {}
 
 //Message Generator

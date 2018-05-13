@@ -19,10 +19,10 @@
 
 namespace EssexEngine{
     namespace Daemons{
-        template <class DriverType, class MessageType> class BaseQueuedDaemon: public BaseDaemon<DriverType>
+        template <class DriverType, class MessageType> class BaseProcessDaemon: public BaseDaemon<DriverType>
         {
             public:
-                BaseQueuedDaemon(WeakPointer<Context> _context):
+                BaseProcessDaemon(WeakPointer<Context> _context):
                 BaseDaemon<DriverType>(_context),
                 thread(
                     UniquePointer<std::thread>()
@@ -35,7 +35,7 @@ namespace EssexEngine{
                     running = true;
                 }
 
-                ~BaseQueuedDaemon() {
+                ~BaseProcessDaemon() {
                     Stop();
                 }
                 
@@ -43,7 +43,7 @@ namespace EssexEngine{
                     running = true;
 
                     thread.Replace(
-                        new std::thread(&BaseQueuedDaemon::Execute, this)
+                        new std::thread(&BaseProcessDaemon::Execute, this)
                     );
                 }
 
