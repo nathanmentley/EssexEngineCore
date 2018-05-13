@@ -15,6 +15,6 @@ namespace Core{
     class IDaemon
     {
         public:
-        private:
+            virtual void Start() = 0;
     };
 }};

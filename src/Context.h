@@ -10,15 +10,15 @@
  */
 #pragma once
 
+#include <typeindex>
+#include <typeinfo>
+#include <unordered_map>
+
 #include <EssexEngineCore/WeakPointer.h>
 #include <EssexEngineCore/WeakPointer.h>
 #include <EssexEngineCore/EssexEnvironment.h>
 #include <EssexEngineCore/IDriver.h>
 #include <EssexEngineCore/IDaemon.h>
-
-#include <typeindex>
-#include <typeinfo>
-#include <unordered_map>
 
 namespace EssexEngine{
     class Context
@@ -52,6 +52,7 @@ namespace EssexEngine{
             template<class DaemonType> void RegisterDaemon(WeakPointer<DaemonType> daemon) {
                 daemonMap[typeid(DaemonType)] = WeakPointer<Core::IDaemon>(daemon.Get());
                 daemon->Init();
+                daemon->Start();
             }
         private:
             std::unordered_map<std::type_index, WeakPointer<Core::IDaemon>> daemonMap;

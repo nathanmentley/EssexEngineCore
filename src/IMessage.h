@@ -8,16 +8,16 @@
  * You should have received a copy of the BSD license with
  * this file. If not, please visit: https://github.com/nathanmentley/EssexEngine
  */
+#pragma once
 
-#include <EssexEngineCore/LogDriver.h>
+namespace EssexEngine{
+namespace Core{
+    class IMessage
+    {
+        public:
+            IMessage() {}
+            virtual ~IMessage() {}
+    };
+}};
 
-using EssexEngine::Core::Logging::LogDriver;
 
-LogDriver::LogDriver(WeakPointer<Context> _context): BaseDriver(_context) {}
-
-LogDriver::~LogDriver() { }
-
-void LogDriver::LogLine(std::string message) {
-    printf("%s", message.c_str());
-    printf("\n");
-}

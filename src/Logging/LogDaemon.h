@@ -12,13 +12,14 @@
 
 #include <stdio.h>
 
-#include <EssexEngineCore/BaseDaemon.h>
+#include <EssexEngineCore/BaseQueuedDaemon.h>
 #include <EssexEngineCore/ILogDriver.h>
+#include <EssexEngineCore/LogDaemonMessage.h>
 
 namespace EssexEngine{ 
 namespace Core{
 namespace Logging{
-    class LogDaemon:public Daemons::BaseDaemon<ILogDriver>
+    class LogDaemon: public Daemons::BaseQueuedDaemon<ILogDriver, LogDaemonMessage>
     {
         public:
             LogDaemon(WeakPointer<Context> _context);
@@ -36,6 +37,11 @@ namespace Logging{
 
             void LogLine(std::string format, ...);
             void DebugLine(std::string format, ...);
+        protected:
+            void ProcessMessage(WeakPointer<LogDaemonMessage> message);
+
+            void _LogLine(WeakPointer<LogDaemonMessage> message);
+            void _DebugLine(WeakPointer<LogDaemonMessage> message);
         private:
     };
 }}};

@@ -20,7 +20,7 @@ namespace Logging{
     class ILogDriver:public IDriver
     {
         public:
-            virtual void LogLine(std::string format, va_list args) = 0;
+            virtual void LogLine(std::string message) = 0;
         private:
     };
 }}};

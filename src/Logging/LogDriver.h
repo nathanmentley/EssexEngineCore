@@ -26,7 +26,7 @@ namespace Logging{
             void Init() {}
 
             //ILogDriver
-            void LogLine(std::string format, va_list args);
+            void LogLine(std::string message);
             
             //BaseDriver
             std::string GetDriverName() { return "Console Log"; }

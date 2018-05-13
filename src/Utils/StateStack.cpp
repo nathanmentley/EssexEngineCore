@@ -56,3 +56,4 @@ std::vector<WeakPointer<IState>> StateStack::GetRawData() {
 int StateStack::GetLength() {
     return (int)data.size();
 }
+
