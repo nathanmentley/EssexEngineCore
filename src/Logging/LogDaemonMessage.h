@@ -12,7 +12,8 @@
 
 #include <string>
 
-#include <EssexEngineCore/IMessage.h>
+#include <EssexEngineCore/BaseMessage.h>
+#include <EssexEngineCore/IMessageResponse.h>
 
 namespace EssexEngine{
 namespace Core{
@@ -24,16 +25,21 @@ namespace Logging{
         };
     }
 
-    class LogDaemonMessage: public IMessage
+    class LogDaemonMessageResponse: public Models::IMessageResponse
+    {
+    
+    };
+
+    class LogDaemonMessage: public Models::BaseMessage<LogDaemonMessageResponse>
     {
         public:
             LogDaemonMessage(Messages::MessageType _type, std::string _message):
-            IMessage() {
+            Models::BaseMessage<LogDaemonMessageResponse>() {
                 type = _type;
                 message = _message;
             }
 
-            Messages::MessageType GetType() {
+            int GetType() {
                 return type;
             }
 

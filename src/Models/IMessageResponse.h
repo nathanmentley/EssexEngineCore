@@ -12,12 +12,11 @@
 
 namespace EssexEngine{
 namespace Core{
-    class IMessage
+namespace Models{
+    class IMessageResponse
     {
         public:
-            IMessage() {}
-            virtual ~IMessage() {}
+            IMessageResponse() {}
+            virtual ~IMessageResponse() {}
     };
-}};
-
-
+}}};

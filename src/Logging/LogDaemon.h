@@ -14,34 +14,29 @@
 
 #include <EssexEngineCore/BaseProcessDaemon.h>
 #include <EssexEngineCore/ILogDriver.h>
+#include <EssexEngineCore/IMessage.h>
 #include <EssexEngineCore/LogDaemonMessage.h>
 
 namespace EssexEngine{ 
 namespace Core{
 namespace Logging{
-    class LogDaemon: public Daemons::BaseProcessDaemon<ILogDriver, LogDaemonMessage>
+    class LogDaemon: public Daemons::BaseProcessDaemon<ILogDriver>
     {
         public:
             LogDaemon(WeakPointer<Context> _context);
             ~LogDaemon();
 
-            void Init() {
-                LogLine(
-                    "Loading Daemon [%s] [%s]",
-                    GetDaemonName().c_str(),
-                    GetDaemonVersion().c_str()
-                );
-            }
+            void Init() {}
             std::string GetDaemonName() { return "Logging"; }
             std::string GetDaemonVersion() { return ESSEX_ENGINE_VERSION; }
 
             void LogLine(std::string format, ...);
             void DebugLine(std::string format, ...);
         protected:
-            void ProcessMessage(WeakPointer<LogDaemonMessage> message);
+            WeakPointer<Models::IMessageResponse> ProcessMessage(WeakPointer<Core::Models::IMessage> message);
 
-            void _LogLine(WeakPointer<LogDaemonMessage> message);
-            void _DebugLine(WeakPointer<LogDaemonMessage> message);
+            WeakPointer<LogDaemonMessageResponse> _LogLine(WeakPointer<LogDaemonMessage> message);
+            WeakPointer<LogDaemonMessageResponse> _DebugLine(WeakPointer<LogDaemonMessage> message);
         private:
     };
 }}};

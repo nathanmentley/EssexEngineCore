@@ -11,43 +11,97 @@
 #pragma once
 
 #include <queue>
+#include <mutex>
 
+#include <EssexEngineCore/IMessageResponse.h>
+#include <EssexEngineCore/IMessage.h>
+#include <EssexEngineCore/BaseMessage.h>
+#include <EssexEngineCore/ThreadPool.h>
 #include <EssexEngineCore/WeakPointer.h>
 #include <EssexEngineCore/UniquePointer.h>
 
 namespace EssexEngine{
 namespace Core{
 namespace Utils{
-    template<class Type> class MessageQueue
+    class MessageQueue
     {
         public:
             MessageQueue() {
-                queue = std::queue<WeakPointer<Type>>();
+                msgQueue = std::queue<WeakPointer<Models::IMessage>>();
             }
             virtual ~MessageQueue() {}
 
-            void Push(WeakPointer<Type> message) {
-                queue.push(message);
+            void Push(WeakPointer<Models::IMessage> message) {
+                //load queue
+                queueAccess.lock();
+                msgQueue.push(message);
+                queueAccess.unlock();
+                
+                //cleanup the response in the background
+                pool.AddTask(
+                    [](WeakPointer<Models::IMessage> msg) {
+                        WeakPointer<Models::IMessageResponse> resp = msg->GetResponse();
+
+                        if(resp.HasValue()) {
+                            UniquePointer<Models::IMessageResponse>(
+                                resp.Get()        
+                            ).Reset();
+                        }
+
+                        UniquePointer<Models::IMessage>(
+                            msg.Get()
+                        ).Reset();
+                    },
+                    message
+                );
             }
 
-            UniquePointer<Type> Pop() {
-                if(!IsEmpty()) {
-                    WeakPointer<Type> value = queue.front();
-                    queue.pop();
+            template<class ResponseType> UniquePointer<ResponseType> Push(WeakPointer<Models::IMessage> message) {
+                queueAccess.lock();
+                msgQueue.push(message);
+                queueAccess.unlock();
 
-                    return UniquePointer<Type>(
+                WeakPointer<ResponseType> resp = message->GetResponse().Cast<ResponseType>();
+
+                UniquePointer<Models::IMessage>(
+                    message.Get()        
+                ).Reset();
+
+                if(resp.HasValue()) {
+                    return UniquePointer<ResponseType>(
+                        resp.Get()
+                    );
+                } else {
+                    return UniquePointer<ResponseType>();
+                }
+            }
+
+            WeakPointer<Models::IMessage> Pop() {
+                if(!IsEmpty()) {
+                    queueAccess.lock();
+                    WeakPointer<Models::IMessage> value = msgQueue.front();
+                    msgQueue.pop();
+                    queueAccess.unlock();
+                    
+                    return WeakPointer<Models::IMessage>(
                         value.Get()
                     );
                 }
 
-                return UniquePointer<Type>();
+                return WeakPointer<Models::IMessage>();
             }
 
             bool IsEmpty() {
-                return queue.empty();
+                queueAccess.lock();
+                bool ret = msgQueue.empty();
+                queueAccess.unlock();
+
+                return ret;
             }
         private:
-            std::queue<WeakPointer<Type>> queue;
+            std::queue<WeakPointer<Models::IMessage>> msgQueue;
+            std::mutex queueAccess;
+            ThreadPool pool;
     };
 }}};
 

@@ -19,7 +19,7 @@
 
 namespace EssexEngine{
     namespace Daemons{
-        template <class DriverType, class MessageType> class BaseProcessDaemon: public BaseDaemon<DriverType>
+        template <class DriverType> class BaseProcessDaemon: public BaseDaemon<DriverType>
         {
             public:
                 BaseProcessDaemon(WeakPointer<Context> _context):
@@ -28,8 +28,8 @@ namespace EssexEngine{
                     UniquePointer<std::thread>()
                 ),
                 messageQueue(
-                    UniquePointer<Core::Utils::MessageQueue<MessageType>>(
-                        new Core::Utils::MessageQueue<MessageType>()
+                    UniquePointer<Core::Utils::MessageQueue>(
+                        new Core::Utils::MessageQueue()
                     )
                 ) {
                     running = true;
@@ -49,10 +49,12 @@ namespace EssexEngine{
 
                 void Execute() {
                     while(running) {
-                        if(!messageQueue->IsEmpty()) {
-                            UniquePointer<MessageType> message = messageQueue->Pop();
+                        while(!messageQueue->IsEmpty()) {
+                            WeakPointer<Core::Models::IMessage> message = messageQueue->Pop();
 
-                            ProcessMessage(message.ToWeakPointer());
+                            message->Resolve(
+                                ProcessMessage(message)
+                            );
                         }
 
                         std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -63,11 +65,18 @@ namespace EssexEngine{
                     running = false;
                 }
             protected:
-                virtual void ProcessMessage(WeakPointer<MessageType> message) = 0;
-                void PushMessage(WeakPointer<MessageType> message) { messageQueue->Push(message); }
+                virtual WeakPointer<Core::Models::IMessageResponse> ProcessMessage(WeakPointer<Core::Models::IMessage> message) = 0;
+                
+                void PushMessage(WeakPointer<Core::Models::IMessage> message) {
+                    messageQueue->Push(message);
+                }
+
+                template <class ResponseType> UniquePointer<ResponseType> PushMessage(WeakPointer<Core::Models::IMessage> message) {
+                    return messageQueue->Push<ResponseType>(message);
+                }
             private:
                 UniquePointer<std::thread> thread;
-                UniquePointer<Core::Utils::MessageQueue<MessageType>> messageQueue;
+                UniquePointer<Core::Utils::MessageQueue> messageQueue;
                 bool running;
         };
     }};

@@ -13,9 +13,11 @@
 
 using EssexEngine::WeakPointer;
 
-using EssexEngine::Core::IMessage;
+using EssexEngine::Core::Models::IMessage;
+using EssexEngine::Core::Models::IMessageResponse;
 
 using EssexEngine::Core::Logging::LogDaemon;
+using EssexEngine::Core::Logging::LogDaemonMessageResponse;
 using EssexEngine::Core::Logging::Messages::MessageType;
 
 LogDaemon::LogDaemon(WeakPointer<Context> _context):BaseProcessDaemon(_context) {}
@@ -33,7 +35,7 @@ void LogDaemon::DebugLine(std::string format, ...) {
     va_end(args);
 
     PushMessage(
-        WeakPointer<LogDaemonMessage>(
+        WeakPointer<IMessage>(
             new LogDaemonMessage(
                 MessageType::DebugLine,
                 message
@@ -53,7 +55,7 @@ void LogDaemon::LogLine(std::string format, ...) {
     va_end(args);
 
     PushMessage(
-        WeakPointer<LogDaemonMessage>(
+        WeakPointer<IMessage>(
             new LogDaemonMessage(
                 MessageType::LogLine,
                 message
@@ -63,26 +65,34 @@ void LogDaemon::LogLine(std::string format, ...) {
 }
 
 //Message Parser
-void LogDaemon::ProcessMessage(WeakPointer<LogDaemonMessage> msg) {
+WeakPointer<IMessageResponse> LogDaemon::ProcessMessage(WeakPointer<IMessage> msg) {
     switch(msg->GetType()) {
         case MessageType::DebugLine:
-            _DebugLine(msg);
-            break;
+            return _DebugLine(msg.Cast<LogDaemonMessage>()).Cast<IMessageResponse>();
         case MessageType::LogLine:
-            _LogLine(msg);
-            break;
+            return _LogLine(msg.Cast<LogDaemonMessage>()).Cast<IMessageResponse>();
     }
+
+    return WeakPointer<IMessageResponse>();
 }
 
 //Logic
-void LogDaemon::_DebugLine(WeakPointer<LogDaemonMessage> message) {
+WeakPointer<LogDaemonMessageResponse> LogDaemon::_DebugLine(WeakPointer<LogDaemonMessage> message) {
     if(HasDriver()) {
         GetDriver()->LogLine("DEBUG: " + message->GetMessage());
     }
+
+    return WeakPointer<LogDaemonMessageResponse>(
+        new LogDaemonMessageResponse()
+    );
 }
 
-void LogDaemon::_LogLine(WeakPointer<LogDaemonMessage> message) {
+WeakPointer<LogDaemonMessageResponse> LogDaemon::_LogLine(WeakPointer<LogDaemonMessage> message) {
     if(HasDriver()) {
         GetDriver()->LogLine(message->GetMessage());
     }
+
+    return WeakPointer<LogDaemonMessageResponse>(
+        new LogDaemonMessageResponse()
+    );
 }
