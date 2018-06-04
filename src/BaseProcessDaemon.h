@@ -15,11 +15,13 @@
 #include <chrono>
 
 #include <EssexEngineCore/BaseDaemon.h>
+#include <EssexEngineCore/IWakeable.h>
+#include <EssexEngineCore/MWakeableSleeper.h>
 #include <EssexEngineCore/MessageQueue.h>
 
 namespace EssexEngine{
     namespace Daemons{
-        template <class DriverType> class BaseProcessDaemon: public BaseDaemon<DriverType>
+        template <class DriverType> class BaseProcessDaemon: public BaseDaemon<DriverType>, public Core::MWakeableSleeper
         {
             public:
                 BaseProcessDaemon(WeakPointer<Context> _context):
@@ -32,10 +34,14 @@ namespace EssexEngine{
                         new Core::Utils::MessageQueue()
                     )
                 ) {
+                    messageQueue->Subscribe(WeakPointer<Core::IWakeable>(this));
+
                     running = true;
                 }
 
                 ~BaseProcessDaemon() {
+                    messageQueue->Unsubscribe(WeakPointer<Core::IWakeable>(this));
+
                     Stop();
                 }
                 
@@ -57,7 +63,7 @@ namespace EssexEngine{
                             );
                         }
 
-                        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+                        WakeableSleep(1000);
                     }
                 }
 

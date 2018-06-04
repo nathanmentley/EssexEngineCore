@@ -12,9 +12,12 @@
 
 #include <queue>
 #include <mutex>
+#include <vector>
+#include <algorithm>
 
 #include <EssexEngineCore/IMessageResponse.h>
 #include <EssexEngineCore/IMessage.h>
+#include <EssexEngineCore/IWakeable.h>
 #include <EssexEngineCore/BaseMessage.h>
 #include <EssexEngineCore/ThreadPool.h>
 #include <EssexEngineCore/WeakPointer.h>
@@ -27,15 +30,24 @@ namespace Utils{
     {
         public:
             MessageQueue() {
+                listeners = std::vector<WeakPointer<IWakeable>>();
                 msgQueue = std::queue<WeakPointer<Models::IMessage>>();
             }
             virtual ~MessageQueue() {}
 
+            void Subscribe(WeakPointer<IWakeable> listener) {
+                listeners.push_back(listener);
+            }
+
+            void Unsubscribe(WeakPointer<IWakeable> listener) {
+                listeners.erase(
+                    std::remove(listeners.begin(), listeners.end(), listener),
+                    listeners.end()
+                );
+            }
+
             void Push(WeakPointer<Models::IMessage> message) {
-                //load queue
-                queueAccess.lock();
-                msgQueue.push(message);
-                queueAccess.unlock();
+                _Push(message);
                 
                 //cleanup the response in the background
                 pool.AddTask(
@@ -57,9 +69,7 @@ namespace Utils{
             }
 
             template<class ResponseType> UniquePointer<ResponseType> Push(WeakPointer<Models::IMessage> message) {
-                queueAccess.lock();
-                msgQueue.push(message);
-                queueAccess.unlock();
+                _Push(message);
 
                 WeakPointer<ResponseType> resp = message->GetResponse().Cast<ResponseType>();
 
@@ -99,8 +109,20 @@ namespace Utils{
                 return ret;
             }
         private:
+            void _Push(WeakPointer<Models::IMessage> message) {
+                queueAccess.lock();
+                msgQueue.push(message);
+                queueAccess.unlock();
+
+                for (auto &listener : listeners)
+                {
+                    listener->Wake();
+                }
+            }
+                
             std::queue<WeakPointer<Models::IMessage>> msgQueue;
             std::mutex queueAccess;
+            std::vector<WeakPointer<IWakeable>> listeners;
             ThreadPool pool;
     };
 }}};
