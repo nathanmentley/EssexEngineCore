@@ -11,6 +11,7 @@
 #pragma once
 
 #include <stdio.h>
+#include <stdarg.h>
 
 #include <EssexEngineCore/BaseProcessDaemon.h>
 #include <EssexEngineCore/ILogDriver.h>
